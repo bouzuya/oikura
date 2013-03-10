@@ -5,7 +5,6 @@
             [clojure.zip :as zip])
   (:gen-class))
 
-
 (def ^:dynamic *aws-access-key-id* nil)
 (def ^:dynamic *aws-secret-key* nil)
 (def algorithm "HmacSHA256")

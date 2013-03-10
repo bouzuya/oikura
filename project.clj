@@ -1,4 +1,4 @@
-(defproject oikura "0.1.0"
+(defproject oikura "0.3.0"
   :description "Amazon price searcher"
   :url "http://github.com/bouzuya/oikura"
   :license {:name "Eclipse Public License"

@@ -5,21 +5,22 @@
            [org.jfree.chart.plot PlotOrientation]
            [org.jfree.chart ChartUtilities]))
 
-; http://java6.blog117.fc2.com/blog-entry-28.html
+(defn image-dir
+  []
+  "image/")
 
-(def dataset
-  (doto
-    (DefaultCategoryDataset.)
-    (.addValue 1000 "x" "2013-01-01")
-    (.addValue 1010 "x" "2013-01-02")
-    (.addValue 1020 "x" "2013-01-03")
-    (.addValue 1100 "x" "2013-01-04")
-    (.addValue 1110 "x" "2013-01-05")
-    (.addValue 1120 "x" "2013-01-06")))
+(defn prices->dataset
+  [prices]
+  (let [ds (DefaultCategoryDataset.)]
+    (doseq [{:keys [asin at price]} prices]
+      (.addValue ds price asin at))
+    ds))
 
-(def jfree-chart
-  (let [title "PRICE"
-        category-axis-label "product"
+
+(defn chart
+  [asin dataset]
+  (let [title asin
+        category-axis-label "date"
         value-axis-label "price"
         orientation PlotOrientation/VERTICAL
         legend false
@@ -29,6 +30,12 @@
       title category-axis-label value-axis-label dataset orientation legend tooltips urls)))
 
 (defn save-chart
-  []
-  (ChartUtilities/saveChartAsPNG (jio/file "test.png") jfree-chart 600 400))
+  [asin prices]
+  (let [name (str (image-dir) asin ".png")
+        f (jio/file name)
+        d (prices->dataset prices)
+        c (chart asin d)
+        w 600
+        h 400]
+    (ChartUtilities/saveChartAsPNG f c w h)))
 

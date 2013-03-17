@@ -1,24 +1,43 @@
 (ns oikura.storage
-  (:require [clojure.java.jdbc :as jdbc])
-  (:gen-class))
+  (:require [clojure.java.jdbc :as jdbc]))
 
-(defn setup
+(defn db
+  []
+  (System/getenv "OIKURA_DB"))
+
+(defn product-all
   []
   (jdbc/with-connection
-    (System/getenv "OIKURA_DB")
-    (do
-      (jdbc/do-commands
-        "DELETE FROM price")
-      (jdbc/do-prepared
-        "INSERT INTO price (asin, at, price) VALUES (?, TO_DATE(?, 'YYYY-MM-DD'), ?)"
-        ["x" "2013-01-01" 1000]
-        ["x" "2013-01-02" 1010]
-        ["x" "2013-01-03" 1020]
-        ["x" "2013-01-04" 1100]
-        ["x" "2013-01-05" 1110]
-        ["x" "2013-01-06" 1120]))))
+    (db)
+    (jdbc/with-query-results
+      results
+      ["SELECT asin FROM product ORDER BY asin ASC"]
+      (into [] results))))
 
-(defn -main
-  []
-  (setup))
+(defn save-price
+  [asin at price]
+  (jdbc/with-connection
+    (db)
+    (jdbc/do-prepared
+      "DELETE FROM price WHERE asin = ? AND at = TO_DATE(?, 'YYYY-MM-DD')"
+      [asin at])
+    (jdbc/do-prepared
+      "INSERT INTO price (asin, at, price) VALUES (?, TO_DATE(?, 'YYYY-MM-DD'), ?)"
+      [asin at price])))
+
+(defn price-all
+  ([]
+   (jdbc/with-connection
+     (db)
+     (jdbc/with-query-results
+       results
+       ["SELECT asin, at, price FROM price ORDER BY asin ASC, at ASC"]
+       (into [] results))))
+  ([asin]
+   (jdbc/with-connection
+     (db)
+     (jdbc/with-query-results
+       results
+       ["SELECT asin, at, price FROM price WHERE asin = ? ORDER BY asin ASC, at ASC" asin]
+       (into [] results)))))
 

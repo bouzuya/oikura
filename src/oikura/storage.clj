@@ -22,7 +22,7 @@
       "DELETE FROM price WHERE asin = ? AND at = TO_DATE(?, 'YYYY-MM-DD')"
       [asin at])
     (jdbc/do-prepared
-      "INSERT INTO price (asin, at, price) VALUES (?, TO_DATE(?, 'YYYY-MM-DD'), ?)"
+      "INSERT INTO price (asin, at, price) VALUES (?, TO_DATE(?, 'YYYY-MM-DD'), TO_NUMBER(?, '999999999999'))"
       [asin at price])))
 
 (defn price-all

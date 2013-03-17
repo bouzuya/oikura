@@ -28,13 +28,17 @@
     (#(.encode (org.apache.commons.codec.binary.Base64.) %))
     (String.)))
 
-(defn timestamp
-  []
+(defn format-date
+  [format]
   (->
     (doto
-      (java.text.SimpleDateFormat. "yyyy-MM-dd'T'HH:mm:ss'Z'")
+      (java.text.SimpleDateFormat. format)
       (.setTimeZone (java.util.TimeZone/getTimeZone "GMT")))
     (.format (.getTime (java.util.Calendar/getInstance)))))
+
+(defn timestamp
+  []
+  (format-date "yyyy-MM-dd'T'HH:mm:ss'Z'"))
 
 (defn encode
   [s]
@@ -74,32 +78,33 @@
     (org.xml.sax.InputSource.)
     xml/parse))
 
-(defn -main
-  [& args]
-  (binding [*aws-access-key-id* (System/getenv "AWS_ACCESS_KEY_ID")
-            *aws-secret-key* (System/getenv "AWS_SECRET_KEY")]
-    (println
-      (->
-        (client/post
-          "https://ecs.amazonaws.jp/onca/xml"
-          {:form-params
-           (sign "POST"
-                 "ecs.amazonaws.jp"
-                 "/onca/xml"
-                 {"Operation" "ItemLookup"
-                  "Service" "AWSECommerceService"
-                  "AssociateTag" "bouzuya-22"
-                  "ItemId" (first args)
-                  "RelationshipType" "Episode"
-                  "ResponseGroup" "OfferSummary"})})
-        :body
-        parse-xml-str
-        zip/xml-zip
-        (dzx/xml1->
-          :Items
-          :Item
-          :OfferSummary
-          :LowestNewPrice
-          :Amount
-          dzx/text)))))
+(defn fetch-price
+  [asin]
+  {:asin asin
+   :at (format-date "yyyy-MM-dd")
+   :price (binding [*aws-access-key-id* (System/getenv "AWS_ACCESS_KEY_ID")
+                    *aws-secret-key* (System/getenv "AWS_SECRET_KEY")]
+            (->
+              (client/post
+                "https://ecs.amazonaws.jp/onca/xml"
+                {:form-params
+                 (sign "POST"
+                       "ecs.amazonaws.jp"
+                       "/onca/xml"
+                       {"Operation" "ItemLookup"
+                        "Service" "AWSECommerceService"
+                        "AssociateTag" "bouzuya-22"
+                        "ItemId" asin
+                        "RelationshipType" "Episode"
+                        "ResponseGroup" "OfferSummary"})})
+              :body
+              parse-xml-str
+              zip/xml-zip
+              (dzx/xml1->
+                :Items
+                :Item
+                :OfferSummary
+                :LowestNewPrice
+                :Amount
+                dzx/text)))})
 

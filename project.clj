@@ -9,5 +9,5 @@
                  [postgresql/postgresql "9.1-901.jdbc4"]
                  [jfree/jfreechart "1.0.13"]
                  [clj-http "0.6.5"]]
-  :main oikura)
+  :main oikura.worker)
 

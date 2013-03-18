@@ -5,6 +5,15 @@
   []
   (System/getenv "OIKURA_DB"))
 
+(defn product-latest
+  [asin]
+  (jdbc/with-connection
+    (db)
+    (jdbc/with-query-results
+      results
+      ["SELECT asin, TO_CHAR(at, 'YYYY-MM-DD') AS at, price FROM price a WHERE a.asin = ? AND a.at = (SELECT MAX(b.at) FROM price b WHERE b.asin = a.asin)" asin]
+      (first results))))
+
 (defn product-all
   []
   (jdbc/with-connection

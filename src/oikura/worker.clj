@@ -17,7 +17,7 @@
 (defn save-chart
   ([] (save-chart (map :asin (st/product-all))))
   ([asins]
-   (let [image-dir (:image-dir (co/config))]
+   (let [image-dir (co/config :image-dir)]
      (when-not (.exists image-dir)
        (.mkdirs image-dir))
      (doseq [asin asins]

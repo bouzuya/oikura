@@ -82,8 +82,8 @@
   [asin]
   {:asin asin
    :at (format-date "yyyy-MM-dd")
-   :price (binding [*aws-access-key-id* (System/getenv "AWS_ACCESS_KEY_ID")
-                    *aws-secret-key* (System/getenv "AWS_SECRET_KEY")]
+   :price (binding [*aws-access-key-id* (co/config :aws-access-key-id)
+                    *aws-secret-key* (co/config :aws-secret-key)]
             (->
               (client/post
                 "https://ecs.amazonaws.jp/onca/xml"

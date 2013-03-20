@@ -1,4 +1,4 @@
-(defproject oikura "0.4.0"
+(defproject oikura "0.5.0"
   :description "Amazon price searcher"
   :url "http://github.com/bouzuya/oikura"
   :license {:name "Eclipse Public License"
@@ -13,6 +13,6 @@
                  [compojure "1.1.5"]
                  [enlive "1.1.1"]]
   :plugins [[lein-ring "0.8.2"]]
-  :ring {:handler oikura.handler/app}
+  :ring {:handler oikura.handler/app :init oikura.handler/init}
   :main oikura.worker)
 

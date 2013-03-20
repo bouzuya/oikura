@@ -27,7 +27,7 @@
    (wo/save-chart [asin])
    {:status 200
     :headers {"Content-Type" "image/png"}
-    :body (jio/file (:image-dir (co/config)) (str asin (when thumbnail? "_t") ".png"))})
+    :body (jio/file (co/config :image-dir) (str asin (when thumbnail? "_t") ".png"))})
 
 (cm/defroutes
   app-routes
@@ -44,4 +44,7 @@
 (def app
   (handler/site app-routes))
 
+(defn init
+  []
+  (co/load-config))
 

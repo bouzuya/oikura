@@ -29,5 +29,6 @@
 
 (defn -main
   []
+  (co/load-config)
   (save-price))
 

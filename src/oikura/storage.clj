@@ -1,5 +1,6 @@
 (ns oikura.storage
-  (:require [clojure.java.jdbc :as jdbc]))
+  (:require [clojure.java.jdbc :as jdbc]
+            [oikura.config :as co]))
 
 (defn product-latest
   [asin]

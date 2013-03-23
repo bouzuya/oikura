@@ -2,7 +2,8 @@
   (:require [clj-http.client :as client]
             [clojure.data.zip.xml :as dzx]
             [clojure.xml :as xml]
-            [clojure.zip :as zip])
+            [clojure.zip :as zip]
+            [oikura.config :as co])
   (:gen-class))
 
 (def ^:dynamic *aws-access-key-id* nil)

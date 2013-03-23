@@ -5,6 +5,17 @@
 (def config-map
   (ref {}))
 
+(defn load-properties
+  [f]
+  (into
+    {}
+    (map
+      (fn [[k v]] [(keyword k) v])
+      (with-open [r (jio/reader f)]
+        (doto
+          (Properties.)
+          (.load r))))))
+
 (defn load-config
   []
   (let [root (jio/file (System/getProperty "user.home") ".oikura")
@@ -19,15 +30,4 @@
 (defn config
   [k]
   (@config-map k))
-
-(defn load-properties
-  [f]
-  (into
-    {}
-    (map
-      (fn [[k v]] [(keyword k) v])
-      (with-open [r (jio/reader f)]
-        (doto
-          (Properties.)
-          (.load r))))))
 

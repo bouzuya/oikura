@@ -13,14 +13,14 @@
   ([asins] (map st/product-latest asins)))
 
 (defn index-page
-  []
+  [r]
   (let [ps (product)]
-    (view/index ps)))
+    (view/index (:context r) ps)))
 
 (defn asin-page
-  [asin]
+  [r asin]
   (let [ps (product [asin])]
-    (view/asin (first ps))))
+    (view/asin (:context r) (first ps))))
 
 (defn image-file
   [asin thumbnail?]
@@ -31,8 +31,8 @@
 
 (cm/defroutes
   app-routes
-  (cm/GET "/" [] (index-page))
-  (cm/GET ["/asin/:asin" :asin #"[a-zA-Z0-9]{10}"] [asin] (asin-page asin))
+  (cm/GET "/" [:as r] (index-page r))
+  (cm/GET ["/asin/:asin" :asin #"[a-zA-Z0-9]{10}"] [asin :as r] (asin-page r asin))
   (cm/GET "/image/:asin-png" [asin-png]
           (let [[_ asin thumbnail?] (re-matches #"([a-zA-Z0-9]{10})(_t)?\.png" asin-png)]
             (if asin

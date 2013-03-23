@@ -28,15 +28,15 @@
   (html/snippet
     (index-html)
     [:.product]
-    [p]
+    [context p]
     [:header :h1 :a]
-    (html/set-attr :href (str "/asin/" (:asin p)))
+    (html/set-attr :href (str context "/asin/" (:asin p)))
     [:header :h1 :a]
     (html/content (:asin p))
     [:.body :p :a]
-    (html/set-attr :href (str "/asin/" (:asin p)))
+    (html/set-attr :href (str context "/asin/" (:asin p)))
     [:.body :p :a :.product-chart :img]
-    (html/set-attr :src (str "/image/" (:asin p) "_t.png"))
+    (html/set-attr :src (str context "/image/" (:asin p) "_t.png"))
     [:.body :p :a :.product-chart :img]
     (html/set-attr :alt (str "asin: " (:asin p) "のグラフ"))
     [:.body :p :a :.product-chart :img]
@@ -53,15 +53,15 @@
   (html/snippet
     (asin-html)
     [:.product]
-    [p]
+    [context p]
     [:header :h1 :a]
-    (html/set-attr :href (str "/asin/" (:asin p)))
+    (html/set-attr :href (str context "/asin/" (:asin p)))
     [:header :h1 :a]
     (html/content (:asin p))
     [:.body :p :a]
-    (html/set-attr :href (str "/asin/" (:asin p)))
+    (html/set-attr :href (str context "/asin/" (:asin p)))
     [:.body :p :a :.product-chart :img]
-    (html/set-attr :src (str "/image/" (:asin p) ".png"))
+    (html/set-attr :src (str context "/image/" (:asin p) ".png"))
     [:.body :p :a :.product-chart :img]
     (html/set-attr :alt (str "asin: " (:asin p) "のグラフ"))
     [:.body :p :a :.product-chart :img]
@@ -74,21 +74,29 @@
     (html/content (.format (DecimalFormat. "###,###,###,###,###") (:price p)))))
 
 (defn index
-  [products]
+  [context products]
   (html/emit*
-    (html/transform
+    (->
       (index-html)
-      [:.product-list :li]
-      (html/clone-for
-        [p products]
-        [:.product]
-        (html/substitute ((index-product) p))))))
+      (html/transform
+        [:.product-list :li]
+        (html/clone-for
+          [p products]
+          [:.product]
+          (html/substitute ((index-product) context p))))
+      (html/transform
+        [:head [:link (html/attr= :rel "stylesheet")]]
+        (html/set-attr :href (str context "/style/default.css"))))))
 
 (defn asin
-  [p]
+  [context product]
   (html/emit*
-    (html/transform
+    (->
       (asin-html)
-      [:.product]
-      (html/substitute ((asin-product) p)))))
+      (html/transform
+        [:.product]
+        (html/substitute ((asin-product) context product)))
+      (html/transform
+        [:head [:link (html/attr= :rel "stylesheet")]]
+        (html/set-attr :href (str context "/style/default.css"))))))
 

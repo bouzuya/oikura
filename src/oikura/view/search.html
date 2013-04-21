@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>oikura</title>
+        <meta name="description" content="oikura は Amazon の価格を追いかける Web サイトです。" />
+        <link rel="stylesheet" type="text/css" href="/style/default.css" media="all" />
+    </head>
+    <body>
+        <header class="page-header">
+            <div class="message">
+                <span class="close-button">OK</span>
+                <p>ASIN <span class="asin">0000000000</span> の登録を完了しました。</p>
+            </div>
+            <h1><a href="/">oikura</a></h1>
+            <div class="search-container">
+                <form class="search" method="get" action="/search">
+                    <input type="search" name="query" placeholder="Search / Register" />
+                    <input type="submit" value="Go" />
+                </form>
+            </div>
+        </header>
+        <div class="page-body">
+            <div class="search-result">
+                <h1><span class="query">0000000000</span> の検索結果</h1>
+                <div class="as-asin">
+                    <p>ASIN <span class="asin">0000000000</span> は登録されていません。</p>
+                    <div class="register-product">
+                        <form class="register" method="post" action="/register">
+                            <input type="hidden" name="asin" value="0000000000" />
+                            <input type="submit" id="register-button" value="ASIN 0000000000 を登録" />
+                        </form>
+                    </div>
+                </div>
+                <div class="as-keyword">
+                    <p><span class="query">0000000000</span> の検索結果は <span class="count">0</span> 件です。</p>
+                    <ul class="product-list">
+                        <li>
+                            <section class="product">
+                                <header>
+                                    <h1><a href="/asin/B008AM2K8K/" class="product-name-anchor"><span class="product-name">B008AM2K8K</span></a></h1>
+                                </header>
+                                <div class="body">
+                                    <p><a href="/asin/B008AM2K8K/"><span class="product-chart"><img width="300" height="200" alt="asin: B008AM2K8K のグラフ" src="image/B008AM2K8K_t.png" /></span></a></p>
+                                    <p class="product-price"><a href="http://amazon.jp/o/ASIN/B008AM2K8K/bouzuya-22" target="_blank">&#xa5; <span class="product-price-value">18,780</span></a></p>
+                                </div>
+                            </section>
+                        </li>
+                        <li>
+                            <section class="product">
+                                <header>
+                                    <h1><a href="/asin/B008AM2K8K/" class="product-name-anchor"><span class="product-name">B008AM2K8K</span></a></h1>
+                                </header>
+                                <div class="body">
+                                    <p><a href="/asin/B008AM2K8K/"><span class="product-chart"><img width="300" height="200" alt="asin: B008AM2K8K のグラフ" src="/image/B008AM2K8K_t.png" /></span></a></p>
+                                    <p class="product-price"><a href="http://amazon.jp/o/ASIN/B008AM2K8K/bouzuya-22" target="_blank">&#xa5; <span class="product-price-value">18,780</span></a></p>
+                                </div>
+                            </section>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -9,7 +9,9 @@
     (jdbc/with-query-results
       results
       ["SELECT asin, TO_CHAR(at, 'YYYY-MM-DD') AS at, price FROM price a WHERE a.asin = ? AND a.at = (SELECT MAX(b.at) FROM price b WHERE b.asin = a.asin)" asin]
-      (first results))))
+      (if (first results)
+        (first results)
+        {:asin asin}))))
 
 (defn product-all
   []
@@ -30,6 +32,14 @@
     (jdbc/do-prepared
       "INSERT INTO price (asin, at, price) VALUES (?, TO_DATE(?, 'YYYY-MM-DD'), TO_NUMBER(?, '999999999999'))"
       [asin at price])))
+
+(defn register-product
+  [asin]
+  (jdbc/with-connection
+    (co/config :db)
+    (jdbc/do-prepared
+      "INSERT INTO product (asin) VALUES (?)"
+      [asin])))
 
 (defn price-all
   ([]
